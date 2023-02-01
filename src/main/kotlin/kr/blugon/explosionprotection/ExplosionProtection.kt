@@ -34,6 +34,7 @@ class ExplosionProtection : JavaPlugin(),Listener {
         logger.info("Plugin Enable")
         Bukkit.getPluginManager().registerEvents(this, this)
 
+
         if(!config.exists()) {
             yaml.set("blockExplosion", false)
             yaml.set("explosionDamage", false)
