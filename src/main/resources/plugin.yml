@@ -5,4 +5,3 @@ api-version: 1.19
 author: Blugon
 libraries:
   - io.github.monun:kommand-core:3.0.0
-

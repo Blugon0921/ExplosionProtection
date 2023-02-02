@@ -1,15 +1,12 @@
 package kr.blugon.explosionprotection
 
 import io.github.monun.kommand.kommand
-import net.md_5.bungee.api.ChatColor
 import org.bukkit.Bukkit
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.block.data.type.Bed
 import org.bukkit.block.data.type.RespawnAnchor
 import org.bukkit.block.data.type.TNT
-import org.bukkit.command.Command
-import org.bukkit.command.CommandSender
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
@@ -17,10 +14,10 @@ import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockExplodeEvent
 import org.bukkit.event.entity.EntityDamageByBlockEvent
 import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityExplodeEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
-import java.util.Collections
 
 class ExplosionProtection : JavaPlugin(),Listener {
 
@@ -97,11 +94,10 @@ class ExplosionProtection : JavaPlugin(),Listener {
     fun blockExplode(event : BlockExplodeEvent) {
         val block = event.block
         val world = block.world
-        val location = block.location.add(.5, .5, .5)
+        val location = block.location.add(.5, .0, .5)
         if(!blockExplosion) {
             event.isCancelled = true
-            world.spawnParticle(Particle.EXPLOSION_HUGE, location, 1, .0, .0, .0, 0.0, null, true)
-            world.playSound(location, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f)
+            world.createExplosion(location, event.yield, false, false)
         }
     }
 
@@ -112,22 +108,22 @@ class ExplosionProtection : JavaPlugin(),Listener {
         val location = entity.location.add(.5, .5, .5)
         if(!blockExplosion) {
             event.isCancelled = true
-            world.spawnParticle(Particle.EXPLOSION_HUGE, location, 1, .0, .0, .0, 0.0, null, true)
-            world.playSound(location, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f)
+            world.createExplosion(location, event.yield, false, false)
         }
     }
 
     @EventHandler
     fun explosionDamage(event : EntityDamageByEntityEvent) {
-        val damager = event.damager
-        if(damager !is TNTPrimed && damager !is Creeper && damager !is Fireball && damager !is Wither && damager !is WitherSkull) return
         if(explosionDamage) return
+        if(event.cause != EntityDamageEvent.DamageCause.BLOCK_EXPLOSION &&
+            event.cause != EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) return
         event.isCancelled = true
     }
     @EventHandler
     fun explosionDamage(event : EntityDamageByBlockEvent) {
-        if(event.damager !is TNT && event.damager !is RespawnAnchor && event.damager !is Bed) return
         if(explosionDamage) return
+        if(event.cause != EntityDamageEvent.DamageCause.BLOCK_EXPLOSION &&
+            event.cause != EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) return
         event.isCancelled = true
     }
 }
