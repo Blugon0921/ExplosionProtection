@@ -1,14 +1,8 @@
 package kr.blugon.explosionprotection
 
-import io.github.monun.kommand.kommand
+import kr.blugon.explosionprotection.command.EPCommand
 import org.bukkit.Bukkit
-import org.bukkit.Particle
-import org.bukkit.Sound
-import org.bukkit.block.data.type.Bed
-import org.bukkit.block.data.type.RespawnAnchor
-import org.bukkit.block.data.type.TNT
 import org.bukkit.configuration.file.YamlConfiguration
-import org.bukkit.entity.*
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockExplodeEvent
@@ -21,24 +15,29 @@ import java.io.File
 
 class ExplosionProtection : JavaPlugin(),Listener {
 
-    var config = File(dataFolder, "config.yml")
-    val yaml = YamlConfiguration.loadConfiguration(config)
+    companion object {
+        val configFile = File("plugins/ExplosionProtection/config.yml")
+        val yaml = YamlConfiguration.loadConfiguration(configFile)
 
-    var blockExplosion = false
-    var explosionDamage = true
+        var blockExplosion = false
+        var explosionDamage = true
+    }
 
     override fun onEnable() {
         logger.info("Plugin Enable")
         Bukkit.getPluginManager().registerEvents(this, this)
 
-
-        if(!config.exists()) {
+        if(!configFile.exists()) {
             yaml.set("blockExplosion", false)
             yaml.set("explosionDamage", false)
-            yaml.save(config)
+            yaml.save(configFile)
         }
-        yaml.load(config)
-        onCommand()
+        yaml.load(configFile)
+
+        getCommand("ep")!!.apply {
+            setExecutor(EPCommand())
+            tabCompleter = EPCommand()
+        }
 
         blockExplosion = yaml.getBoolean("blockExplosion")
         explosionDamage = yaml.getBoolean("explosionDamage")
@@ -47,48 +46,10 @@ class ExplosionProtection : JavaPlugin(),Listener {
     override fun onDisable() {
         yaml.set("blockExplosion", blockExplosion)
         yaml.set("explosionDamage", explosionDamage)
-        yaml.save(config)
+        yaml.save(configFile)
         logger.info("Plugin Disable")
     }
 
-    fun onCommand() {
-        kommand {
-            register("explosionprotection", "ep") {
-                requires {
-                    isOp
-                }
-
-                then("block") {
-                    then("on") {
-                        executes {
-                            sender.sendMessage("§7[§9ExplosionProtection§7] §f폭발에 의한 블럭파괴를 비활성화 했습니다")
-                            blockExplosion = false
-                        }
-                    }
-                    then("off") {
-                        executes {
-                            sender.sendMessage("§7[§9ExplosionProtection§7] §f폭발에 의한 블럭파괴를 활성화 했습니다")
-                            blockExplosion = true
-                        }
-                    }
-                }
-                then("damage") {
-                    then("on") {
-                        executes {
-                            sender.sendMessage("§7[§9ExplosionProtection§7] §f폭발에 의해 엔티티가 받는 피해를 비활성화 했습니다")
-                            explosionDamage = false
-                        }
-                    }
-                    then("off") {
-                        executes {
-                            sender.sendMessage("§7[§9ExplosionProtection§7] §f폭발에 의해 엔티티가 받는 피해를 활성화 했습니다")
-                            explosionDamage = true
-                        }
-                    }
-                }
-            }
-        }
-    }
 
     @EventHandler
     fun blockExplode(event : BlockExplodeEvent) {

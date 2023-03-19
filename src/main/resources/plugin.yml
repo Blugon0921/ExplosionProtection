@@ -3,5 +3,14 @@ version: ${project.version}
 main: ${project.group}.${project.name.toLowerCase()}.${project.name}
 api-version: 1.19
 author: Blugon
-libraries:
-  - io.github.monun:kommand-core:3.0.0
+depend: [Kotlin]
+
+permissions:
+  explosionprotection.command:
+    description: "Explosion Protection Command"
+    default: op
+
+commands:
+  ep:
+    description: "Explosion Protection Command"
+    permission: explosionprotection.command
