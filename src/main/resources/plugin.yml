@@ -1,9 +1,11 @@
-name: ${project.name}
-version: ${project.version}
-main: ${project.group}.${project.name.toLowerCase()}.${project.name}
-api-version: 1.19
+name: '${name}'
+version: '${version}'
+main: '${group}.${name.toLowerCase()}.${name}'
+api-version: '${MinecraftVersion}'
 author: Blugon
-depend: [Kotlin]
+libraries:
+  - org.jetbrains.kotlin:kotlin-stdlib:${KotlinVersion}
+  - org.jetbrains.kotlin:kotlin-reflect:${KotlinVersion}
 
 permissions:
   explosionprotection.command:
