@@ -34,7 +34,7 @@ class ExplosionProtection : JavaPlugin(),Listener {
         if(!configFile.exists()) saveConfig()
         yaml.load(configFile)
 
-        getCommand("explosion")!!.apply {
+        getCommand("explosionprotection")!!.apply {
             setExecutor(EPCommand())
             tabCompleter = EPCommand()
         }
