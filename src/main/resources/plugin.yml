@@ -13,6 +13,7 @@ permissions:
     default: op
 
 commands:
-  ep:
+  explosionprotection:
     description: "Explosion Protection Command"
     permission: explosionprotection.command
+    aliases: [ep]

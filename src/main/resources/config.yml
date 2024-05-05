@@ -1,2 +1,2 @@
-blockExplosion: false
-explosionDamage: false
+blockProtection: true
+damageProtection: true

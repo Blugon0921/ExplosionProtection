@@ -1,26 +1,29 @@
 plugins {
-    kotlin("jvm") version "1.8.21"
+    kotlin("jvm") version "1.9.20"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.papermc.paperweight.userdev") version "1.7.0"
 }
 
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 val buildPath = File("C:/Files/Minecraft/Servers/\$plugins")
-val mcVersion = "1.20.1"
+val mcVersion = "1.20.4"
 val kotlinVersion = kotlin.coreLibrariesVersion
 
 repositories {
     mavenCentral()
-    maven("https://papermc.io/repo/repository/maven-public/")
+    maven("https://repo.blugon.kr/repository/maven-public/")
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
-    compileOnly("io.papermc.paper:paper-api:${mcVersion}-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle("${mcVersion}-R0.1-SNAPSHOT")
+    implementation("kr.blugon:mini-color:latest.release")
 }
 
 extra.apply {
@@ -32,7 +35,7 @@ extra.apply {
 
 tasks {
     compileKotlin {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_21.toString()
     }
 
     processResources {
@@ -43,6 +46,28 @@ tasks {
     }
 
     create<Jar>("buildPaper") {
+        val file = File("./build/libs/${project.name}.jar")
+        if(file.exists()) {
+            file.deleteOnExit()
+        }
+        archiveBaseName.set(project.name) //Project Name
+        archiveFileName.set("${project.name}.jar") //Build File Name
+        archiveVersion.set(project.version.toString()) //Version
+        from(sourceSets["main"].output)
+
+        doLast {
+            copy {
+                from(archiveFile) //Copy from
+                into(buildPath) //Copy to
+            }
+        }
+    }
+
+    shadowJar {
+        val file = File("./build/libs/${project.name}.jar")
+        if(file.exists()) {
+            file.deleteOnExit()
+        }
         archiveBaseName.set(project.name) //Project Name
         archiveFileName.set("${project.name}.jar") //Build File Name
         archiveVersion.set(project.version.toString()) //Version
