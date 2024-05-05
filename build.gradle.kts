@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
+    compileOnly(kotlin("stdlib"))
     paperweight.paperDevBundle("${mcVersion}-R0.1-SNAPSHOT")
     implementation("kr.blugon:mini-color:latest.release")
 }
