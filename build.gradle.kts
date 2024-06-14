@@ -1,7 +1,9 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    kotlin("jvm") version "1.9.23"
+    kotlin("jvm") version "2.0.0"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.papermc.paperweight.userdev") version "1.7.0"
+    id("io.papermc.paperweight.userdev") version "1.7.1"
 }
 
 
@@ -12,7 +14,7 @@ java {
 }
 
 val buildPath = File("C:/Files/Minecraft/Servers/\$plugins")
-val mcVersion = "1.20.4"
+val mcVersion = "1.20.6"
 val kotlinVersion = kotlin.coreLibrariesVersion
 
 repositories {
@@ -24,6 +26,7 @@ dependencies {
     compileOnly(kotlin("stdlib"))
     paperweight.paperDevBundle("${mcVersion}-R0.1-SNAPSHOT")
     implementation("kr.blugon:mini-color:latest.release")
+    implementation("kr.blugon:kotlin-brigadier:latest.release")
 }
 
 extra.apply {
@@ -35,7 +38,9 @@ extra.apply {
 
 tasks {
     compileKotlin {
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_21.toString()
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_21)
+        }
     }
 
     processResources {

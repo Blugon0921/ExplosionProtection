@@ -12,8 +12,8 @@ permissions:
     description: "Explosion Protection Command"
     default: op
 
-commands:
-  explosionprotection:
-    description: "Explosion Protection Command"
-    permission: explosionprotection.command
-    aliases: [ep]
+#commands:
+#  explosionprotection:
+#    description: "Explosion Protection Command"
+#    permission: explosionprotection.command
+#    aliases: [ep]

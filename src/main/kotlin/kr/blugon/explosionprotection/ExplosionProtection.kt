@@ -34,10 +34,7 @@ class ExplosionProtection : JavaPlugin(),Listener {
         if(!configFile.exists()) saveConfig()
         yaml.load(configFile)
 
-        getCommand("explosionprotection")!!.apply {
-            setExecutor(EPCommand())
-            tabCompleter = EPCommand()
-        }
+        EPCommand(this) //Regist
 
         blockProtection = yaml.getBoolean("blockProtection")
         damageProtection = yaml.getBoolean("damageProtection")
