@@ -14,7 +14,7 @@ java {
 }
 
 val buildPath = File("C:/Files/Minecraft/Servers/\$plugins")
-val mcVersion = "1.20.6"
+val mcVersion = "1.21.4"
 val kotlinVersion = kotlin.coreLibrariesVersion
 
 repositories {

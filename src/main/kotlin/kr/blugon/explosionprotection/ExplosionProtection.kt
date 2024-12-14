@@ -5,6 +5,8 @@ import kr.blugon.minicolor.MiniColor
 import kr.blugon.minicolor.MiniColor.Companion.miniMessage
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.entity.BreezeWindCharge
+import org.bukkit.entity.WindCharge
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.BlockExplodeEvent
@@ -41,8 +43,8 @@ class ExplosionProtection : JavaPlugin(),Listener {
     }
 
     override fun onDisable() {
-        yaml.set("blockExplosion", blockProtection)
-        yaml.set("explosionDamage", damageProtection)
+        yaml.set("blockProtection", blockProtection)
+        yaml.set("damageProtection", damageProtection)
         yaml.save(configFile)
         logger.info("Plugin Disable")
     }
@@ -62,6 +64,7 @@ class ExplosionProtection : JavaPlugin(),Listener {
     fun entityExplode(event : EntityExplodeEvent) {
         if(!blockProtection) return
         val entity = event.entity
+        if(entity is WindCharge || entity is BreezeWindCharge) return
         val world = entity.world
         val location = entity.location
         event.isCancelled = true
